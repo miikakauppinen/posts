@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Post } from './interfaces';
+import { Post } from '../interfaces';
 
 interface PostsState {
   posts: Post[];
