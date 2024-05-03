@@ -3,6 +3,8 @@ import { fetchPosts } from './postsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Post } from './interfaces';
 import { RootState } from '../../store';
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import DraftsIcon from '@mui/icons-material/Drafts';
 
 const PostsComponent: React.FC = () => {
   const dispatch = useDispatch();
@@ -18,11 +20,18 @@ const PostsComponent: React.FC = () => {
     <div>
       {status === 'loading' && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
-      <ul>
+      <List>
         {posts.map((post: Post) => (
-          <li key={post.id}>{post.title}</li>
+          <ListItem key={post.id}>
+            <ListItemButton>
+              <ListItemIcon>
+                <DraftsIcon />
+              </ListItemIcon>
+              <ListItemText primary={post.title} />
+            </ListItemButton>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   );
 }
