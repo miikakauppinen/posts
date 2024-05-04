@@ -7,6 +7,20 @@ import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText } fr
 import DraftsIcon from '@mui/icons-material/Drafts';
 import { Link } from 'react-router-dom';
 import { Delete } from '@mui/icons-material';
+import styled from 'styled-components';
+import { StyledContainer } from '../StyledComponents';
+
+const StyledList = styled(List)`
+  width: 50%;
+  margin: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+`;
+
+const StyledDeleteIcon = styled(Delete)`
+  margin: 0.5rem;
+  cursor: pointer;
+`
 
 const PostsComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,15 +43,15 @@ const PostsComponent: React.FC = () => {
       body: 'New post body',
     }
 
-    dispatch(addPost(payload))
+    dispatch(addPost(payload));
   }
 
   return (
-    <div>
+    <StyledContainer>
       {status === 'loading' && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
       <Button onClick={() => handleAddPost()}>Add post</Button>
-      <List>
+      <StyledList>
         {posts.map((post: Post) => (
           <ListItem key={post.id}>
             <ListItemButton component={Link} to={`/posts/${post.id}`}>
@@ -47,12 +61,12 @@ const PostsComponent: React.FC = () => {
               <ListItemText primary={post.title} />
             </ListItemButton>
             <ListItemIcon onClick={() => handleRemovePost(post.id)}>
-              <Delete />
+              <StyledDeleteIcon />
             </ListItemIcon>
           </ListItem>
         ))}
-      </List>
-    </div>
+      </StyledList>
+    </StyledContainer>
   );
 }
 

@@ -1,36 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchPost } from './postSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
+import { StyledContainer } from '../StyledComponents';
+import styled from 'styled-components';
+
+const StyledPostCard = styled.div`
+  padding: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+`
 
 const PostComponent: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { post, status, error } = useSelector((state: RootState) => state.post);
-  const {posts} = useSelector((state: RootState) => state.posts)
+  const { posts } = useSelector((state: RootState) => state.posts);
+  const [statePost, setStatePost] = useState(posts.find(({id}) => id === Number(postId)))
 
   useEffect(() => {
-    if (postId) {
+    if (!statePost && postId) {
       dispatch(fetchPost(Number(postId)));
+      //@ts-ignore
+      setStatePost(post)
     }
-  }, [postId, dispatch]);
-
-  //@ts-ignore
-  //Use locally created post if no post found because jsonplaceholder doesnt actually create one
-  const localPost = Object.keys(post).length ? post : posts.find(({id}) => id === Number(postId));
+  }, [statePost, post, postId, dispatch]);
 
   return (
-    <div>
+    <StyledContainer>
       {status === 'loading' && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
-      {localPost && (
-        <div>
-          <h1>{localPost.title}</h1>
-          <p>{localPost.body}</p>
-        </div>
+      {statePost && (
+        <StyledPostCard>
+          <h1>{statePost.title}</h1>
+          <p>{statePost.body}</p>
+        </StyledPostCard>
       )}
-    </div>
+    </StyledContainer>
   );
 }
 
