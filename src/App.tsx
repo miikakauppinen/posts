@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import {  } from 'react-router-dom';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 

@@ -25,7 +25,7 @@ const StyledDeleteIcon = styled(Delete)`
 
 const PostsComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {posts, status, error} = useSelector((state: RootState) => state.posts);
+  const { posts, status, error } = useSelector((state: RootState) => state.posts);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
