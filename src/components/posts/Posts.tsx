@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchPosts, removePost, addPost } from './postsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Post } from '../interfaces';
@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { Delete } from '@mui/icons-material';
 import styled from 'styled-components';
 import { StyledContainer } from '../StyledComponents';
+import AddNewPostModal from './AddNewPostModal';
 
 const StyledList = styled(List)`
   width: 50%;
@@ -25,6 +26,9 @@ const StyledDeleteIcon = styled(Delete)`
 const PostsComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {posts, status, error} = useSelector((state: RootState) => state.posts);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [postTitle, setPostTitle] = useState('');
+  const [postBody, setPostBody] = useState('');
 
   useEffect(() => {
     if (status === 'idle') {
@@ -39,18 +43,21 @@ const PostsComponent: React.FC = () => {
   const handleAddPost = () => {
     const payload = {
       userId: 1,
-      title: 'New post',
-      body: 'New post body',
+      title: postTitle,
+      body: postBody,
     }
 
     dispatch(addPost(payload));
-  }
+    setPostTitle('');
+    setPostBody('');
+    setModalOpen(false);
+  };
 
   return (
     <StyledContainer>
       {status === 'loading' && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
-      <Button onClick={() => handleAddPost()}>Add post</Button>
+      <Button onClick={() => setModalOpen(true)}>Add post</Button>
       <StyledList>
         {posts.map((post: Post) => (
           <ListItem key={post.id}>
@@ -66,6 +73,17 @@ const PostsComponent: React.FC = () => {
           </ListItem>
         ))}
       </StyledList>
+      {modalOpen && 
+        <AddNewPostModal 
+          modalOpen={modalOpen} 
+          handleClose={() => setModalOpen(false)} 
+          postTitle={postTitle}
+          setPostTitle={setPostTitle}
+          postBody={postBody}
+          setPostBody={setPostBody}
+          onConfirm={handleAddPost}
+        />
+      }
     </StyledContainer>
   );
 }
